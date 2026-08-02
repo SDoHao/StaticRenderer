@@ -1,10 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
-#include<iostream>
-#include<glm/glm.hpp>
-#include<glm/gtc/constants.hpp>
+#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 namespace RENDERER {
+
     using Vector2f = glm::vec2;
     using Vector3f = glm::vec3;
     using Vector4f = glm::vec4;
@@ -16,13 +17,15 @@ namespace RENDERER {
     using Matrix33 = glm::mat3;
     using Matrix44 = glm::mat4;
 
+    using Color = glm::vec3;
+
     const float PI = glm::pi<float>(); //3.14159265358979323846f;
 
     inline void dumpVector(const Vector3f& v3)
     {
         std::cout << "Vector3f(" << v3.x << "," << v3.y << "," << v3.z << ")"<<std::endl;
     }
-    
+
     //构造平移方法
     inline Matrix44 makeTranslation(const Vector3f &t)
     {
@@ -97,7 +100,6 @@ namespace RENDERER {
         );
     }
 
-    
     /**
     * @brief 欧拉角生成3种旋转矩阵
     * @param euler 欧拉角 (ax, ay, az) 弧度 = 角度 / 180° * PI  or glm::redians(角度)

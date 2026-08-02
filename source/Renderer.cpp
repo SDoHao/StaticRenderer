@@ -1,28 +1,87 @@
-#include<renderer.h>
+#include <renderer.h>
 
 namespace RENDERER {
+    Renderer::Renderer(int w, int h):mViewWidth(w),mViewHeight(h){
+        mCurrentPixelIndex = 0;
+    }
+
     void  Renderer::run()
     {
-        struct mfb_window * window = mfb_open_ex("Render", 800, 600, MFB_WF_RESIZABLE);
+        struct mfb_window * window = mfb_open_ex("Render", mViewWidth, mViewHeight, MFB_WF_RESIZABLE);
         if (window == NULL)
             return;
 
-        uint32_t * buffer = (uint32_t *)malloc(800 * 600 * 4);
+        mbuffer = (uint32_t *)malloc(mViewWidth * mViewHeight * 4);
+
+        int numThreads = std::thread::hardware_concurrency();
+        std::vector<std::thread> renderThreads(numThreads);
+        for(int i = 0;i < numThreads;i++)
+        {
+            renderThreads[i] = std::thread(&Renderer::runRenderThread,this); 
+            renderThreads[i].detach();
+        }
+
 
         mfb_update_state state;
         do {
-            // TODO: add some fancy rendering to the buffer of size 800 * 600
-
-            state = mfb_update_ex(window, buffer, 800, 600);
+            state = mfb_update_ex(window, mbuffer, mViewWidth, mViewHeight);
 
             if (state != MFB_STATE_OK)
                 break;
 
         } while(mfb_wait_sync(window));
 
-        free(buffer);
-        buffer = NULL;
+        free(mbuffer);
+        mbuffer = NULL;
         window = NULL;
     }
 
+    Color  Renderer::renderPixel(int x,int y)
+    {
+        //return Color(1.0f,0.3f,0.7825f)0;
+        Color color;
+        color.r = (float)x / mViewWidth;
+        color.g = (float)y / mViewHeight;
+        color.b = 0.0f;
+
+        // 绘制每个像素等待1秒，模拟耗时渲染
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        return color;
+    }
+
+   void Renderer::runRenderSingleThread()
+   {
+        for(int y = 0;y < mViewHeight;y++)
+        {
+            for(int x = 0;x < mViewWidth;x++)
+            {
+                Color color = renderPixel(x,y);
+                uint32_t r = glm::clamp((uint32_t)std::round(color.r * 255.f),0u,255u);
+                uint32_t g = glm::clamp((uint32_t)std::round(color.g * 255.f),0u,255u);
+                uint32_t b = glm::clamp((uint32_t)std::round(color.b * 255.f),0u,255u);
+                mbuffer[y * mViewWidth + x] = (r << 16) | (g << 8) | (b);
+            }
+        }
+    }
+
+    void Renderer::runRenderThread()
+    {
+        //读取当前屏幕的下一个像素
+        while(true)
+        {
+                int pixelIndex = mCurrentPixelIndex.fetch_add(1);
+                if(pixelIndex >= mViewWidth * mViewHeight)
+                    break;
+
+                int x = pixelIndex % mViewWidth;
+                int y = pixelIndex / mViewWidth;
+
+                Color color = renderPixel(x,y);
+                uint32_t r = glm::clamp((uint32_t)std::round(color.r * 255.f),0u,255u);
+                uint32_t g = glm::clamp((uint32_t)std::round(color.g * 255.f),0u,255u);
+                uint32_t b = glm::clamp((uint32_t)std::round(color.b * 255.f),0u,255u);
+                mbuffer[y * mViewWidth + x] = (r << 16) | (g << 8) | (b);
+        }
+    }
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/ext.hpp>
 
 namespace RENDERER {
 

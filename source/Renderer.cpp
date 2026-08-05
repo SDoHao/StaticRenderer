@@ -3,6 +3,15 @@
 namespace RENDERER {
     Renderer::Renderer(int w, int h):mViewWidth(w),mViewHeight(h){
         mCurrentPixelIndex = 0;
+        mCamera.Initialize(
+            Vector3f(10.0f,5.0f,20.0f),
+            Vector3f(10.0f,10.0f,30.0f),
+            Vector3f(0.0f,1.0f,0.0f),
+            glm::radians(45.0f),
+            0.1f,
+            1000.0f,
+            mViewWidth,mViewHeight
+        );
     }
 
     void  Renderer::run()
@@ -21,7 +30,6 @@ namespace RENDERER {
             renderThreads[i].detach();
         }
 
-
         mfb_update_state state;
         do {
             state = mfb_update_ex(window, mbuffer, mViewWidth, mViewHeight);
@@ -38,11 +46,15 @@ namespace RENDERER {
 
     Color  Renderer::renderPixel(int x,int y)
     {
-        //return Color(1.0f,0.3f,0.7825f)0;
-        Color color;
-        color.r = (float)x / mViewWidth;
-        color.g = (float)y / mViewHeight;
-        color.b = 0.0f;
+        Ray ray = mCamera.getRay(x,y);
+        RENDERER::Vector3f d = ray.d;
+        Color color = d * 0.5f + 0.5f;
+
+        // return Color(1.0f,0.3f,0.7825f)0;
+        // Color color;
+        // color.r = (float)x / mViewWidth;
+        // color.g = (float)y / mViewHeight;
+        // color.b = 0.0f;
 
         // 绘制每个像素等待1秒，模拟耗时渲染
         std::this_thread::sleep_for(std::chrono::milliseconds(1));

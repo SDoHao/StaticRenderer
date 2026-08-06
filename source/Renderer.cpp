@@ -7,7 +7,7 @@ namespace RENDERER {
             Vector3f(10.0f,5.0f,20.0f),
             Vector3f(10.0f,10.0f,30.0f),
             Vector3f(0.0f,1.0f,0.0f),
-            glm::radians(45.0f),
+            glm::radians(60.0f),
             0.1f,
             1000.0f,
             mViewWidth,mViewHeight
@@ -48,14 +48,14 @@ namespace RENDERER {
     {
         Ray ray = mCamera.getRay(x,y);
         RENDERER::Vector3f d = ray.d;
-        Color color = d * 0.5f + 0.5f;
-
+        Color color(d * 0.5f + 0.5f);
         // return Color(1.0f,0.3f,0.7825f)0;
         // Color color;
         // color.r = (float)x / mViewWidth;
         // color.g = (float)y / mViewHeight;
         // color.b = 0.0f;
-
+        // Color color(1.1f,0.89f,0.0f);
+        // Color color((float)x / mViewWidth, (float)y / mViewHeight, 0.0f);
         // 绘制每个像素等待1秒，模拟耗时渲染
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 

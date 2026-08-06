@@ -31,8 +31,10 @@ void Camera::Initialize(const Vector3f& p, const Vector3f& target, const Vector3
         W / 2.0f,H / 2.0f,0.0f,1.0f
     );
 
-    mCombineMatrix = viewportMatrix * projectionMartix * viewMatrix;
-    mInvCombineMatrix = glm::inverse(mCombineMatrix);
+    Matrix44 CombineMatrix = viewportMatrix * projectionMartix * viewMatrix;
+    Matrix44 InvCombineMatrix = glm::inverse(CombineMatrix);
+    mCombineMatrix = CombineMatrix;
+    mInvCombineMatrix = InvCombineMatrix;
 }
 
 Ray Camera::getRay(int x,int y)const

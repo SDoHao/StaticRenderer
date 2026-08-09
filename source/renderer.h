@@ -2,6 +2,7 @@
 #define RENDERER_H
 #include "common.h"
 #include "camera.h"
+#include "sphere.h"
 #include <MiniFB.h>
 #include <iostream>
 #include <thread>
@@ -24,6 +25,8 @@ namespace RENDERER {
         uint32_t * mbuffer = nullptr;
         std::atomic<int> mCurrentPixelIndex = 0;
         Camera mCamera;
+
+        Sphere* mSphere;
     };
 
 }

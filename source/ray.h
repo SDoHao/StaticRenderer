@@ -11,6 +11,14 @@ namespace RENDERER{
         float maxt = FLT_MAX;
     };
 
+    struct Intersection
+    {
+        //世界坐标系下
+        Vector3f position;          //交点位置
+        Vector3f normal;            //交点法线
+        float t;                    //射线参数t值，即交点到射线原点的距离
+    };
+
     inline Ray operator*(const Matrix44& m,const Ray& r)
     {
         Ray result;

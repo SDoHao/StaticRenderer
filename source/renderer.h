@@ -3,6 +3,7 @@
 #include "common.h"
 #include "camera.h"
 #include "sphere.h"
+#include "disk.h"
 #include <MiniFB.h>
 #include <iostream>
 #include <thread>
@@ -27,6 +28,7 @@ namespace RENDERER {
         Camera mCamera;
 
         Sphere* mSphere;
+        Disk* mDisk;
     };
 
 }

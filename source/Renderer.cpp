@@ -13,7 +13,8 @@ namespace RENDERER {
             w,h
         );
 
-        mSphere = new Sphere(Vector3f(0,0,4),1.0f);
+        mSphere = new Sphere(Vector3f(1,1,4),1.0f);
+        mDisk = new Disk(Vector3f(0,-2,5),Vector3f(glm::radians(90.0f),0,0),1.0f);
     }
 
     void  Renderer::run()
@@ -60,17 +61,16 @@ namespace RENDERER {
         // Color color((float)x / mViewWidth, (float)y / mViewHeight, 0.0f);
         // 绘制每个像素等待1秒，模拟耗时渲染
         Intersection isect;
-        if (mSphere ->intersect(ray,isect))
+        if (mDisk ->intersect(ray,isect))
         {  
-            // 光源方向，模拟从右上方照过来
-            Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));
+            // // // 光源方向，模拟从右上方照过来
+            // Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));
 
-            // 朗伯漫反射：法线 · 光照方向，clamp到0~1，不能负数
-            float ndotl = glm::dot(isect.normal, lightDir);
-            float diffuse = glm::clamp(ndotl, 0.0f, 1.0f);
+            // // 朗伯漫反射：法线 · 光照方向，clamp到0~1，不能负数
+            // float ndotl = glm::dot(isect.normal, lightDir);
+            // float diffuse = glm::clamp(ndotl, 0.0f, 1.0f);
 
-            // 基础红色，乘以光照亮度
-            return Color(diffuse, diffuse, diffuse);
+            return Color(1, 1, 0);
         }
         return Color(0,0,0);
 

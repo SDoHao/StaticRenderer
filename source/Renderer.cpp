@@ -15,6 +15,8 @@ namespace RENDERER {
 
         mSphere = new Sphere(Vector3f(1,1,4),1.0f);
         mDisk = new Disk(Vector3f(0,-2,5),Vector3f(glm::radians(90.0f),0,0),1.0f);
+        mTriangle = new Triangle(Vector3f(-1,0,0),Vector3f(0,1,0),Vector3f(1,0,0),
+            makeWorldTransform(Vector3f(0,0,5),Vector3f(0,0,0),2.0f));
     }
 
     void  Renderer::run()
@@ -61,7 +63,7 @@ namespace RENDERER {
         // Color color((float)x / mViewWidth, (float)y / mViewHeight, 0.0f);
         // 绘制每个像素等待1秒，模拟耗时渲染
         Intersection isect;
-        if (mDisk ->intersect(ray,isect))
+        if (mTriangle ->intersect(ray,isect))
         {  
             // // // 光源方向，模拟从右上方照过来
             // Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));

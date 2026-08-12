@@ -13,10 +13,14 @@ namespace RENDERER {
             w,h
         );
 
-        mSphere = new Sphere(Vector3f(1,1,4),1.0f);
-        mDisk = new Disk(Vector3f(0,-2,5),Vector3f(glm::radians(90.0f),0,0),1.0f);
-        mTriangle = new Triangle(Vector3f(-1,0,0),Vector3f(0,1,0),Vector3f(1,0,0),
+        auto * mSphere = new Sphere(Vector3f(1,1,4),1.0f);
+        auto * mDisk = new Disk(Vector3f(0,-2,5),Vector3f(glm::radians(90.0f),0,0),1.0f);
+        auto * mTriangle = new Triangle(Vector3f(-1,0,0),Vector3f(0,1,0),Vector3f(1,0,0),
             makeWorldTransform(Vector3f(0,0,5),Vector3f(0,0,0),2.0f));
+
+        mPrimitives.push_back(mSphere);
+        mPrimitives.push_back(mDisk);
+        mPrimitives.push_back(mTriangle);
     }
 
     void  Renderer::run()
@@ -63,17 +67,22 @@ namespace RENDERER {
         // Color color((float)x / mViewWidth, (float)y / mViewHeight, 0.0f);
         // 绘制每个像素等待1秒，模拟耗时渲染
         Intersection isect;
-        if (mTriangle ->intersect(ray,isect))
-        {  
-            // // // 光源方向，模拟从右上方照过来
-            // Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));
+        for (auto &primitive : mPrimitives)
+        {
+            if (primitive ->intersect(ray,isect))
+            {  
+                // 光源方向，模拟从右上方照过来
+                Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));
 
-            // // 朗伯漫反射：法线 · 光照方向，clamp到0~1，不能负数
-            // float ndotl = glm::dot(isect.normal, lightDir);
-            // float diffuse = glm::clamp(ndotl, 0.0f, 1.0f);
+                // 朗伯漫反射：法线 · 光照方向，clamp到0~1，不能负数
+                float ndotl = glm::dot(isect.normal, lightDir);
+                float diffuse = glm::clamp(ndotl, 0.0f, 1.0f);
 
-            return Color(1, 1, 0);
+                return Color(diffuse, diffuse, 0);
+            }
         }
+        
+
         return Color(0,0,0);
 
         // std::this_thread::sleep_for(std::chrono::milliseconds(1));

@@ -7,6 +7,7 @@
 #include "triangle.h"
 #include <MiniFB.h>
 #include <iostream>
+#include <vector>
 #include <thread>
 #include <atomic>
 
@@ -28,9 +29,7 @@ namespace RENDERER {
         std::atomic<int> mCurrentPixelIndex = 0;
         Camera mCamera;
 
-        Sphere* mSphere;
-        Disk* mDisk;
-        Triangle* mTriangle;
+        std::vector<Primitive*> mPrimitives;
     };
 
 }

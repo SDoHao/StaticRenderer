@@ -1,15 +1,14 @@
 #ifndef SPHERE_H
 #define SPHERE_H
-#include "common.h"
-#include "ray.h"
+#include "primitive.h"
 
 namespace RENDERER{
 
-    class Sphere
+    class Sphere : public Primitive
     {
     public:
         Sphere(const Vector3f& center,float radius);
-        bool intersect(Ray ray, Intersection& isect) const;
+        virtual bool intersect(Ray ray, Intersection& isect) const override;
         ~Sphere();
     private:
         float mRadius = 1;

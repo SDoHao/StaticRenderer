@@ -1,11 +1,12 @@
 #ifndef DISK_H
 #define DISK_H
-#include "ray.h"
+#include "primitive.h"
 namespace RENDERER{
-    class Disk{
+    class Disk : public Primitive
+    {
     public:
         Disk(const Vector3f& center,const Vector3f& euler,float radius);
-        bool intersect(Ray ray, Intersection& isect) const;
+        virtual bool intersect(Ray ray, Intersection& isect) const override;
     private:
         float mRadius = 1;
         Matrix44 mObject2World;     // 对象空间到世界空间的变换矩阵

@@ -3,17 +3,15 @@
 
 namespace RENDERER
 {
-    Disk::Disk(const Vector3f& center,const Vector3f& euler,float radius)
-        :mRadius(radius)
+    Disk::Disk(SceneObject* pSceneObject,float radius)
+        :Primitive(pSceneObject),mRadius(radius)
     {
-        mObject2World = makeWorldTransform(center,euler,1.0f);
-        mWorld2Object = glm::inverse(mObject2World);
     }
     
     bool Disk::intersect(Ray ray, Intersection& isect) const
     {
         // ray转换成局部坐标系
-        Ray r = mWorld2Object * ray;
+        Ray r = m_pSceneObject->getWorldToObject() * ray;
         if(fabs(r.d.z) < 1e-6f)
             return false;
 
@@ -28,8 +26,8 @@ namespace RENDERER
         if(glm::dot(p,p) > mRadius * mRadius)
             return false;
 
-        isect.position = Vector3f(mObject2World * Vector4f(p,1.0f));
-        isect.normal = glm::normalize(Vector3f(mObject2World * Vector4f(0,0,1,0)));
+        isect.position = Vector3f(m_pSceneObject->getObjectToWorld() * Vector4f(p,1.0f));
+        isect.normal = glm::normalize(Vector3f(m_pSceneObject->getObjectToWorld() * Vector4f(0,0,1,0)));
         isect.t = t;
 
         return true;

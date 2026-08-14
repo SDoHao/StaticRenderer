@@ -12,15 +12,22 @@ namespace RENDERER {
             1000.0f,
             w,h
         );
-
-        auto * mSphere = new Sphere(Vector3f(1,1,4),1.0f);
-        auto * mDisk = new Disk(Vector3f(0,-2,5),Vector3f(glm::radians(90.0f),0,0),1.0f);
-        auto * mTriangle = new Triangle(Vector3f(-1,0,0),Vector3f(0,1,0),Vector3f(1,0,0),
-            makeWorldTransform(Vector3f(0,0,5),Vector3f(0,0,0),2.0f));
-
-        mPrimitives.push_back(mSphere);
-        mPrimitives.push_back(mDisk);
-        mPrimitives.push_back(mTriangle);
+        
+        mTestSceneObject = new SceneObject(Vector3f(0,0,5),Vector3f(0,0,0),2.0f);
+        auto pTriangle1 = new Triangle(mTestSceneObject,Vector3f(-1,-1,0),Vector3f(1,-1,0),Vector3f(1,1,0));
+        auto pTriangle2 = new Triangle(mTestSceneObject,Vector3f(-1,-1,0),Vector3f(1,1,0),Vector3f(-1,1,0));
+        mTestSceneObject->addPrimitive(pTriangle1);
+        mTestSceneObject->addPrimitive(pTriangle2);
+    }
+    
+    Renderer::~Renderer()
+    {
+        if(mTestSceneObject)
+        {
+            delete mTestSceneObject;
+            mTestSceneObject = nullptr;
+        }
+        
     }
 
     void  Renderer::run()
@@ -56,41 +63,23 @@ namespace RENDERER {
     Color  Renderer::renderPixel(int x,int y)
     {
         Ray ray = mCamera.getRay(x,y);
-        // RENDERER::Vector3f d = ray.d;
-        // Color color(d * 0.5f + 0.5f);
-        // return Color(1.0f,0.3f,0.7825f)0;
-        // Color color;
-        // color.r = (float)x / mViewWidth;
-        // color.g = (float)y / mViewHeight;
-        // color.b = 0.0f;
-        // Color color(1.1f,0.89f,0.0f);
-        // Color color((float)x / mViewWidth, (float)y / mViewHeight, 0.0f);
-        // 绘制每个像素等待1秒，模拟耗时渲染
         Intersection isect;
-        for (auto &primitive : mPrimitives)
+        Color color(0,0,0);
+        if(mTestSceneObject->intersect(ray,isect))
         {
-            if (primitive ->intersect(ray,isect))
-            {  
-                // 光源方向，模拟从右上方照过来
-                Vector3f lightDir = glm::normalize(Vector3f(0.0f,1.0f,-1.5f));
-
-                // 朗伯漫反射：法线 · 光照方向，clamp到0~1，不能负数
-                float ndotl = glm::dot(isect.normal, lightDir);
-                float diffuse = glm::clamp(ndotl, 0.0f, 1.0f);
-
-                return Color(diffuse, diffuse, 0);
-            }
+            color = isect.normal * 0.5f + 0.5f;
         }
-        
-
-        return Color(0,0,0);
-
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        // return color;
+        return color;
     }
 
-   void Renderer::runRenderSingleThread()
-   {
+    // Color  Renderer::renderSubPixel(int x,int y)
+    // {
+
+
+    // }
+
+    void Renderer::runRenderSingleThread()
+    {
         for(int y = 0;y < mViewHeight;y++)
         {
             for(int x = 0;x < mViewWidth;x++)

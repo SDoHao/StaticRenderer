@@ -2,17 +2,16 @@
 
 namespace RENDERER
 {
-    Sphere::Sphere(const Vector3f &center, float radius)
-        : mRadius(radius)
+    Sphere::Sphere(SceneObject* pSceneObject, float radius)
+        : Primitive(pSceneObject),mRadius(radius)
     {
-        mObject2World = makeWorldTransform(center,Vector3f(0,0,0),1.0f);
-        mWorld2Object = glm::inverse(mObject2World);
+
     }
 
     bool RENDERER::Sphere::intersect(Ray ray, Intersection &isect) const
     {
         // ray转换成球体局部空间
-        Ray r = mWorld2Object * ray;
+        Ray r = m_pSceneObject->getWorldToObject() * ray;
         float A = glm::dot(r.d,r.d);
         float B = 2.0f * glm::dot(r.d,r.o);
         float C = glm::dot(r.o,r.o) - mRadius * mRadius;
@@ -34,8 +33,8 @@ namespace RENDERER
         Vector3f p = r.o + t * r.d;
         Vector3f n = glm::normalize(p);
 
-        isect.position = Vector3f(mObject2World * Vector4f(p,1.0f));
-        isect.normal = glm::normalize(Vector3f(mObject2World * Vector4f(n,0.0f)));
+        isect.position = Vector3f(m_pSceneObject->getObjectToWorld() * Vector4f(p,1.0f));
+        isect.normal = glm::normalize(Vector3f(m_pSceneObject->getObjectToWorld() * Vector4f(n,0.0f)));
         isect.t = t;
         
         return true;

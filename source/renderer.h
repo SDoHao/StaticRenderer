@@ -17,10 +17,11 @@ namespace RENDERER {
     public:
         Renderer(){}
         Renderer(int w, int h);
-        virtual ~Renderer(){}
+        virtual ~Renderer();
         void run();
     private:
         Color renderPixel(int x,int y);
+        // Color renderSubPixel(int x,int y);
         void runRenderSingleThread();
         void runRenderThread();
         int mViewWidth = 800;
@@ -29,7 +30,7 @@ namespace RENDERER {
         std::atomic<int> mCurrentPixelIndex = 0;
         Camera mCamera;
 
-        std::vector<Primitive*> mPrimitives;
+        SceneObject* mTestSceneObject = nullptr;
     };
 
 }

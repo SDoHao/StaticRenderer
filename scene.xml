@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+    <!-- 摄像机参数: position/target/up 为三维向量, fov 为角度(非弧度), near/far 为裁剪面 -->
+    <camera position="0,0,0" target="0,0,1" up="0,1,0" fov="60" near="0.1" far="1000"/>
+
+    <!-- 场景物体: position=位置, euler=欧拉角(角度), scale=缩放 -->
+    <sceneobject position="0,0,5" euler="0,0,0" scale="2.0">
+        <!-- 三角形: v0/v1/v2 为局部空间顶点坐标 -->
+        <triangle v0="-1,-1,0" v1="1,-1,0" v2="1,1,0"/>
+        <triangle v0="-1,-1,0" v1="1,1,0" v2="-1,1,0"/>
+        <!-- 球体: radius=半径 -->
+        
+    </sceneobject>
+    <sceneobject position="0,0,5" euler="0,0,0" scale="2.0">
+        <!-- 球体: radius=半径 -->
+        <sphere radius="0.5"/>   
+    </sceneobject>
+    
+    <!-- 圆盘示例(已注释):
+    <sceneobject position="0,0,3" euler="0,0,0" scale="1.0">
+        <disk radius="1.0"/>
+    </sceneobject>
+    -->
+</scene>

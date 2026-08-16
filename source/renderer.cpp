@@ -1,29 +1,14 @@
 #include <renderer.h>
 
 namespace RENDERER {
-    Renderer::Renderer(int w, int h):mViewWidth(w),mViewHeight(h){
+    Renderer::Renderer(int w, int h, const std::string& sceneFile):mViewWidth(w),mViewHeight(h){
         mCurrentPixelIndex = 0;
 
-        mScene  = new Scene();
-        Camera mTesCamera;
-        mTesCamera.Initialize(
-            Vector3f(0.0f,0.0f,0.0f),
-            Vector3f(0.0f,0.0f,1.0f),
-            Vector3f(0.0f,1.0f,0.0f),
-            glm::radians(60.0f),
-            0.1f,
-            1000.0f,
-            w,h
-        );
-        mScene->setCamera(mTesCamera);
-
-        //给场景添加物体
-        SceneObject * mTestSceneObject = mScene->createSceneObject(Vector3f(0,0,5),Vector3f(0,0,0),2.0f);
-        mTestSceneObject->createPrimitive<Triangle>(Vector3f(-1,-1,0),Vector3f(1,-1,0),Vector3f(1,1,0));
-        mTestSceneObject->createPrimitive<Triangle>(Vector3f(-1,-1,0),Vector3f(1,1,0),Vector3f(-1,1,0));
-
-        SceneObject * mSphere = mScene->createSceneObject(Vector3f(0,0,2),Vector3f(0,0,0),2.0f);
-        mTestSceneObject->createPrimitive<Sphere>(0.5f);
+        mScene = new Scene();
+        if(!SceneLoader::load(mScene, sceneFile, w, h))
+        {
+            std::cerr << "[Renderer] 场景加载失败: " << sceneFile << std::endl;
+        }
     }
     
     Renderer::~Renderer()

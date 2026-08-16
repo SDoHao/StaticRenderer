@@ -2,10 +2,7 @@
 #define RENDERER_H
 #include "common.h"
 #include "scene.h"
-#include "camera.h"
-#include "sphere.h"
-#include "disk.h"
-#include "triangle.h"
+#include "scene_loader.h"
 #include <MiniFB.h>
 #include <iostream>
 #include <vector>
@@ -17,7 +14,7 @@ namespace RENDERER {
     {
     public:
         Renderer(){}
-        Renderer(int w, int h);
+        Renderer(int w, int h, const std::string& sceneFile = "scene.xml");
         virtual ~Renderer();
         void run();
     private:

@@ -3,7 +3,10 @@
 namespace RENDERER {
     Renderer::Renderer(int w, int h):mViewWidth(w),mViewHeight(h){
         mCurrentPixelIndex = 0;
-        mCamera.Initialize(
+
+        mScene  = new Scene();
+        Camera mTesCamera;
+        mTesCamera.Initialize(
             Vector3f(0.0f,0.0f,0.0f),
             Vector3f(0.0f,0.0f,1.0f),
             Vector3f(0.0f,1.0f,0.0f),
@@ -12,22 +15,21 @@ namespace RENDERER {
             1000.0f,
             w,h
         );
-        
-        mTestSceneObject = new SceneObject(Vector3f(0,0,5),Vector3f(0,0,0),2.0f);
-        auto pTriangle1 = new Triangle(mTestSceneObject,Vector3f(-1,-1,0),Vector3f(1,-1,0),Vector3f(1,1,0));
-        auto pTriangle2 = new Triangle(mTestSceneObject,Vector3f(-1,-1,0),Vector3f(1,1,0),Vector3f(-1,1,0));
-        mTestSceneObject->addPrimitive(pTriangle1);
-        mTestSceneObject->addPrimitive(pTriangle2);
+        mScene->setCamera(mTesCamera);
+
+        //给场景添加物体
+        SceneObject * mTestSceneObject = mScene->createSceneObject(Vector3f(0,0,5),Vector3f(0,0,0),2.0f);
+        mTestSceneObject->createPrimitive<Triangle>(Vector3f(-1,-1,0),Vector3f(1,-1,0),Vector3f(1,1,0));
+        mTestSceneObject->createPrimitive<Triangle>(Vector3f(-1,-1,0),Vector3f(1,1,0),Vector3f(-1,1,0));
+
+        SceneObject * mSphere = mScene->createSceneObject(Vector3f(0,0,2),Vector3f(0,0,0),2.0f);
+        mTestSceneObject->createPrimitive<Sphere>(0.5f);
     }
     
     Renderer::~Renderer()
     {
-        if(mTestSceneObject)
-        {
-            delete mTestSceneObject;
-            mTestSceneObject = nullptr;
-        }
-        
+        if(mScene)
+            delete mScene;
     }
 
     void  Renderer::run()
@@ -62,10 +64,10 @@ namespace RENDERER {
 
     Color  Renderer::renderPixel(int x,int y)
     {
-        Ray ray = mCamera.getRay(x,y);
+        Ray ray = mScene->getCamera().getRay(x,y);
         Intersection isect;
         Color color(0,0,0);
-        if(mTestSceneObject->intersect(ray,isect))
+        if(mScene->intersect(ray,isect))
         {
             color = isect.normal * 0.5f + 0.5f;
         }

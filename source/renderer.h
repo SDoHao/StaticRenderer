@@ -1,6 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "common.h"
+#include "scene.h"
 #include "camera.h"
 #include "sphere.h"
 #include "disk.h"
@@ -28,9 +29,8 @@ namespace RENDERER {
         int mViewHeight = 600;
         uint32_t * mbuffer = nullptr;
         std::atomic<int> mCurrentPixelIndex = 0;
-        Camera mCamera;
 
-        SceneObject* mTestSceneObject = nullptr;
+        Scene * mScene = nullptr;
     };
 
 }

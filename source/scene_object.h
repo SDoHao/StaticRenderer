@@ -17,6 +17,15 @@ namespace RENDERER
         virtual ~SceneObject();
         bool intersect(Ray ray,Intersection& isect)const;
         void addPrimitive(Primitive * primitive){mPrimitives.push_back(primitive);}
+        
+        template<typename T,typename... Args>
+        T* createPrimitive(Args&&... args)
+        {
+            T* primitive = new T(this,std::forward<Args>(args)...);
+            mPrimitives.push_back(primitive);
+            return primitive;
+        }
+
         const Matrix44& getObjectToWorld()const {return mObject2World;}
         const Matrix44& getWorldToObject()const {return mWorld2Object;}
         
